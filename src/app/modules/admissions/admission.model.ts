@@ -1,5 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { IAdmission, IAdmissionModel } from './auth.interface';
+import {
+  IAdmission,
+  IAdmissionModel,
+  IAppointment,
+  IAppointmentModel,
+  ISchoolTourBooking,
+  ISchoolTourBookingModel,
+} from './auth.interface';
 
 const AdmissionSchema = new Schema(
   {
@@ -7,7 +14,11 @@ const AdmissionSchema = new Schema(
     middleName: { type: String },
     lastName: { type: String, required: true },
     nickName: { type: String },
-    gender: { type: String, enum: ['Male', 'Female', 'Others'], required: true },
+    gender: {
+      type: String,
+      enum: ['Male', 'Female', 'Others'],
+      required: true,
+    },
     nationality: { type: String, required: true },
     phone: { type: String },
     email: { type: String, required: true },
@@ -44,56 +55,117 @@ const AdmissionSchema = new Schema(
   }
 );
 
+const OnlineAppointmentSchema = new Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    gradeLevel: {
+      type: String,
+      required: true,
+    },
+    preferredCallDate: {
+      type: Date,
+      required: true,
+    },
+    preferredCallTime: {
+      type: String,
+      required: true,
+    },
+    subject: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    additionalMessage: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const OnlineAppointmentSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
+const SchoolTourBookingSchema = new Schema(
+  {
+    parentName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    studentName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    studentCurrentSchool: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    studentCurrentGrade: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    studentBirthDate: {
+      type: Date,
+      required: true,
+    },
+    schoolTourDate: {
+      type: Date,
+      required: true,
+    },
+    preferredTime: {
+      type: String,
+      required: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  mobileNumber: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  gradeLevel: {
-    type: String,
-    required: true,
-  },
-  preferredCallDate: {
-    type: Date,
-    required: true,
-  },
-  preferredCallTime: {
-    type: String,
-    required: true,
-  },
-  subject: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  additionalMessage: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
+export const SchoolTourBooking = model<ISchoolTourBooking, ISchoolTourBookingModel>(
+  'SchoolTourBooking',
+  SchoolTourBookingSchema
+);
 
-
-
-export const OnlineAppointment = model('OnlineAppointment', OnlineAppointmentSchema);
-export const Admission = model<IAdmission, IAdmissionModel>('Admission', AdmissionSchema);
+export const Appointment = model<IAppointment, IAppointmentModel>(
+  'Appointment',
+  OnlineAppointmentSchema
+);
+export const Admission = model<IAdmission, IAdmissionModel>(
+  'Admission',
+  AdmissionSchema
+);

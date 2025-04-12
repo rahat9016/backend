@@ -15,6 +15,16 @@ router.get(
   AdmissionController.studentAdmissionList
 );
 
+router.post(
+  '/online-appointment',
+  validateRequest(admissionValidation.onlineAppointmentZodSchema),
+  AdmissionController.onlineAppointment
+);
 
+router.post(
+  '/school-tour-booking',
+  validateRequest(admissionValidation.schoolTourBookingZodSchema),
+  AdmissionController.schoolTourBooking
+);
 
 export const AdmissionRoutes = router;

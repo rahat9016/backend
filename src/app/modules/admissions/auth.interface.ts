@@ -37,9 +37,35 @@ export type IAdmission = {
   _id?: string;
 }
 
+export type IAppointment = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+  gradeLevel: string;
+  preferredCallDate: string; // Use Date if you're working directly with Date objects
+  preferredCallTime: string;
+  subject: string;
+  additionalMessage: string;
+}
+
+export type ISchoolTourBooking = {
+  parentName: string;
+  studentName: string;
+  studentCurrentSchool: string;
+  studentCurrentGrade: string;
+  studentBirthDate: string; // Format: YYYY-MM-DD
+  schoolTourDate: string;   // Format: YYYY-MM-DD
+  preferredTime: string;
+  mobileNumber: string;
+  email: string;
+}
+
+
 
 export type IAdmissionModel = Model<IAdmission, Record<string, unknown>>;
-
+export type IAppointmentModel = Model<IAppointment, Record<string, unknown>>;
+export type ISchoolTourBookingModel = Model<ISchoolTourBooking, Record<string, unknown>>;
 
 export type IPaginationAdmission = {
   data: IAdmission[];

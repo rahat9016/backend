@@ -1,5 +1,10 @@
-import { Admission } from './admission.model';
-import { IAdmission, IPaginationAdmission } from './auth.interface';
+import { Admission, Appointment, SchoolTourBooking } from './admission.model';
+import {
+  IAdmission,
+  IAppointment,
+  IPaginationAdmission,
+  ISchoolTourBooking,
+} from './auth.interface';
 
 const studentAdmission = async (
   payload: IAdmission
@@ -26,7 +31,23 @@ const getAllStudentAdmission = async (
   return { data: result, total };
 };
 
+const OnlineAppointment = async (
+  payload: IAppointment
+): Promise<IAppointment | null> => {
+  const result = await Appointment.create(payload);
+  return result;
+};
+
+const schoolTourBooking = async (
+  payload: ISchoolTourBooking
+): Promise<ISchoolTourBooking | null> => {
+  const result = await SchoolTourBooking.create(payload);
+  return result;
+};
+
 export const AdmissionService = {
   studentAdmission,
   getAllStudentAdmission,
+  OnlineAppointment,
+  schoolTourBooking
 };

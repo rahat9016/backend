@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const admissionFormSchema = z.object({
+const admissionFormSchema = z.object({
   body: z.object({
     // Student Information
     firstName: z.string({ required_error: 'First name is required' }),
@@ -47,6 +47,71 @@ export const admissionFormSchema = z.object({
   }),
 });
 
+const onlineAppointmentZodSchema = z.object({
+  body: z.object({
+    firstName: z
+      .string({ required_error: 'First name is required' })
+      .min(1, 'First name is required'),
+    lastName: z
+      .string({ required_error: 'Last name is required' })
+      .min(1, 'Last name is required'),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .email('Invalid email format'),
+    mobileNumber: z
+      .string({ required_error: 'Mobile number is required' })
+      .min(1, 'Mobile number is required'),
+    gradeLevel: z
+      .string({ required_error: 'Grade level is required' })
+      .min(1, 'Grade level is required'),
+    preferredCallDate: z.string({
+      required_error: 'Preferred call date is required',
+    }),
+    preferredCallTime: z.string({
+      required_error: 'Preferred call date is required',
+    }),
+    subject: z
+      .string({ required_error: 'Subject is required' })
+      .min(1, 'Subject is required'),
+    additionalMessage: z
+      .string({ required_error: 'Additional message is required' })
+      .min(1, 'Additional message is required'),
+  }),
+});
+
+const schoolTourBookingZodSchema = z.object({
+  body: z.object({
+    parentName: z
+      .string({ required_error: 'Parent name is required' })
+      .min(1, 'Parent name is required'),
+    studentName: z
+      .string({ required_error: 'Student name is required' })
+      .min(1, 'Student name is required'),
+    studentCurrentSchool: z
+      .string({ required_error: 'Student current school is required' })
+      .min(1, 'Student current school is required'),
+    studentCurrentGrade: z
+      .string({ required_error: 'Student current grade is required' })
+      .min(1, 'Student current grade is required'),
+    studentBirthDate: z
+      .string({ required_error: 'Student birth date is required' }),
+    schoolTourDate: z
+      .string({ required_error: 'School tour date is required' }),
+    preferredTime: z.string({
+      required_error: 'Preferred time is required',
+    }),
+    mobileNumber: z
+      .string({ required_error: 'Mobile number is required' })
+      .min(1, 'Mobile number is required'),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .email('Invalid email format'),
+  }),
+});
+
 export const admissionValidation = {
   admissionFormSchema,
+  onlineAppointmentZodSchema,
+  schoolTourBookingZodSchema
+  // SchoolTourBookingSchema,
 };
