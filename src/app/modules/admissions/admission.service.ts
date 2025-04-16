@@ -1,7 +1,9 @@
-import { Admission, Appointment, PreRegisterSchema, SchoolTourBooking } from './admission.model';
+import { Admission, Appointment, FAQSchema, FeedBackSchema, PreRegisterSchema, SchoolTourBooking } from './admission.model';
 import {
   IAdmission,
   IAppointment,
+  IFAQ,
+  IFeedback,
   IPaginationAdmission,
   IPreRegister,
   ISchoolTourBooking,
@@ -51,10 +53,26 @@ const preRegister = async (
   const result = await PreRegisterSchema.create(payload);
   return result;
 };
+const feedback = async (
+  payload: IFeedback
+): Promise<IFeedback | null> => {
+  const result = await FeedBackSchema.create(payload);
+  return result;
+};
+
+const faq = async (
+  payload: IFAQ
+): Promise<IFAQ | null> => {
+  const result = await FAQSchema.create(payload);
+  return result;
+};
+
 export const AdmissionService = {
   studentAdmission,
   getAllStudentAdmission,
   OnlineAppointment,
   schoolTourBooking,
-  preRegister
+  preRegister,
+  feedback,
+  faq
 };

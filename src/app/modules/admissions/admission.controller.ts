@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
-import { IAdmission, IAppointment, IPreRegister, ISchoolTourBooking } from './auth.interface';
+import { IAdmission, IAppointment, IFAQ, IFeedback, IPreRegister, ISchoolTourBooking } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
 
@@ -81,10 +81,35 @@ const preRegister = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+const feedback = asyncHandler(async (req: Request, res: Response) => {
+  // create user
+  const result = await AdmissionService.feedback(req.body);
+  sendResponse<IFeedback>(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Submitted successfully. ',
+    data: result,
+  });
+});
+
+const faq = asyncHandler(async (req: Request, res: Response) => {
+  // create user
+  const result = await AdmissionService.faq(req.body);
+  sendResponse<IFAQ>(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Submitted successfully. ',
+    data: result,
+  });
+});
+
+
 export const AdmissionController = {
   studentAdmission,
   studentAdmissionList,
   onlineAppointment,
   schoolTourBooking,
-  preRegister
+  preRegister,
+  feedback,
+  faq
 };

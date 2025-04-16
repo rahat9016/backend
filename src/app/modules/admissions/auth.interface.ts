@@ -72,8 +72,26 @@ export type IPreRegister = {
   studentNationality: string;
   currentSchool: string;
 }
+export type IFeedback = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  isRelativeStudying: 'Yes' | 'No';
+  subject: string;
+  message: string;
+}
 
+export type IFAQ = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  question: string;
+}
 
+export type IFAQModel = Model<IFAQ, Record<string, unknown>>;
+export type IFeedbackModel = Model<IFeedback, Record<string, unknown>>;
 export type IPreRegisterModel = Model<IPreRegister, Record<string, unknown>>;
 export type IAdmissionModel = Model<IAdmission, Record<string, unknown>>;
 export type IAppointmentModel = Model<IAppointment, Record<string, unknown>>;

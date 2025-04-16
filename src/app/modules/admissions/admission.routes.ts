@@ -33,7 +33,12 @@ router.post(
 );
 router.post(
   '/feedback',
-  validateRequest(admissionValidation.preRegisterZodSchema),
-  AdmissionController.preRegister
+  validateRequest(admissionValidation.feedbackZodSchema),
+  AdmissionController.feedback
+);
+router.post(
+  '/faq',
+  validateRequest(admissionValidation.faqZodSchema),
+  AdmissionController.faq
 );
 export const AdmissionRoutes = router;

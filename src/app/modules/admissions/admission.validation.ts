@@ -146,7 +146,7 @@ export const preRegisterZodSchema = z.object({
   }),
 });
 
-export const Schema = z.object({
+export const feedbackZodSchema = z.object({
   body: z.object({
     firstName: z.string().min(1, 'First name is required'),
     lastName: z.string().min(1, 'Last name is required'),
@@ -160,9 +160,21 @@ export const Schema = z.object({
   }),
 });
 
+export const faqZodSchema = z.object({
+  body: z.object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    phone: z.string().min(1, 'Phone number is required'),
+    question: z.string().min(10, 'Message must be at least 10 characters'),
+  }),
+});
+
 export const admissionValidation = {
   admissionFormSchema,
   onlineAppointmentZodSchema,
   schoolTourBookingZodSchema,
   preRegisterZodSchema,
+  feedbackZodSchema,
+  faqZodSchema
 };

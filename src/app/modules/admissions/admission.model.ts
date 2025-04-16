@@ -4,6 +4,9 @@ import {
   IAdmissionModel,
   IAppointment,
   IAppointmentModel,
+  IFAQ,
+  IFAQModel,
+  IFeedbackModel,
   IPreRegister,
   IPreRegisterModel,
   ISchoolTourBooking,
@@ -211,6 +214,44 @@ const preRegisterSchema = new Schema(
   {
     timestamps: true,
   }
+);
+
+const feedbackSchema = new Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    isRelativeStudying: { type: String, enum: ['Yes', 'No'], required: true },
+    subject: { type: String, required: true },
+    message: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const faqSchema = new Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    question: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+
+export const FAQSchema = model<IFAQ, IFAQModel>(
+  'FAQ',
+  faqSchema
+);
+export const FeedBackSchema = model<IPreRegister, IFeedbackModel>(
+  'FeedBack',
+  feedbackSchema
 );
 export const PreRegisterSchema = model<IPreRegister, IPreRegisterModel>(
   'PreRegister',
