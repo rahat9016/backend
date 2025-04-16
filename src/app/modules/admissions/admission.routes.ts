@@ -26,5 +26,14 @@ router.post(
   validateRequest(admissionValidation.schoolTourBookingZodSchema),
   AdmissionController.schoolTourBooking
 );
-
+router.post(
+  '/pre-register',
+  validateRequest(admissionValidation.preRegisterZodSchema),
+  AdmissionController.preRegister
+);
+router.post(
+  '/feedback',
+  validateRequest(admissionValidation.preRegisterZodSchema),
+  AdmissionController.preRegister
+);
 export const AdmissionRoutes = router;

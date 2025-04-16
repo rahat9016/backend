@@ -93,10 +93,12 @@ const schoolTourBookingZodSchema = z.object({
     studentCurrentGrade: z
       .string({ required_error: 'Student current grade is required' })
       .min(1, 'Student current grade is required'),
-    studentBirthDate: z
-      .string({ required_error: 'Student birth date is required' }),
-    schoolTourDate: z
-      .string({ required_error: 'School tour date is required' }),
+    studentBirthDate: z.string({
+      required_error: 'Student birth date is required',
+    }),
+    schoolTourDate: z.string({
+      required_error: 'School tour date is required',
+    }),
     preferredTime: z.string({
       required_error: 'Preferred time is required',
     }),
@@ -109,9 +111,58 @@ const schoolTourBookingZodSchema = z.object({
   }),
 });
 
+export const preRegisterZodSchema = z.object({
+  body: z.object({
+    parentName: z
+      .string({ required_error: 'Parent name is required' })
+      .min(1, 'Parent name is required'),
+    parentEmail: z
+      .string({ required_error: 'Parent email is required' })
+      .email('Invalid email format'),
+    parentContactNumber: z
+      .string({ required_error: 'Contact number is required' })
+      .min(1, 'Contact number is required'),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .email('Invalid email format'),
+    grade: z
+      .string({ required_error: 'Grade is required' })
+      .min(1, 'Grade is required'),
+    studentName: z
+      .string({ required_error: 'Student name is required' })
+      .min(1, 'Student name is required'),
+    studentGender: z.enum(['Male', 'Female'], {
+      required_error: 'Gender is required',
+    }),
+    studentDOB: z
+      .string({ required_error: 'Date of birth is required' })
+      .min(1, 'Date of birth is required'),
+    studentNationality: z
+      .string({ required_error: 'Student nationality is required' })
+      .min(1),
+    currentSchool: z
+      .string({ required_error: 'Current school is required' })
+      .min(1),
+  }),
+});
+
+export const Schema = z.object({
+  body: z.object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    phone: z.string().min(1, 'Phone number is required'),
+    isRelativeStudying: z.enum(['Yes', 'No'], {
+      required_error: 'Please select if your relative is currently studying',
+    }),
+    subject: z.string().min(1, 'Subject is required'),
+    message: z.string().min(10, 'Message must be at least 10 characters'),
+  }),
+});
+
 export const admissionValidation = {
   admissionFormSchema,
   onlineAppointmentZodSchema,
-  schoolTourBookingZodSchema
-  // SchoolTourBookingSchema,
+  schoolTourBookingZodSchema,
+  preRegisterZodSchema,
 };

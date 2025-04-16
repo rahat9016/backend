@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
-import { IAdmission, IAppointment, ISchoolTourBooking } from './auth.interface';
+import { IAdmission, IAppointment, IPreRegister, ISchoolTourBooking } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
 
@@ -70,9 +70,21 @@ const schoolTourBooking = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+const preRegister = asyncHandler(async (req: Request, res: Response) => {
+  // create user
+  const result = await AdmissionService.preRegister(req.body);
+  sendResponse<IPreRegister>(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Submitted successfully. ',
+    data: result,
+  });
+});
+
 export const AdmissionController = {
   studentAdmission,
   studentAdmissionList,
   onlineAppointment,
-  schoolTourBooking
+  schoolTourBooking,
+  preRegister
 };

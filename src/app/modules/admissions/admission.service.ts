@@ -1,8 +1,9 @@
-import { Admission, Appointment, SchoolTourBooking } from './admission.model';
+import { Admission, Appointment, PreRegisterSchema, SchoolTourBooking } from './admission.model';
 import {
   IAdmission,
   IAppointment,
   IPaginationAdmission,
+  IPreRegister,
   ISchoolTourBooking,
 } from './auth.interface';
 
@@ -44,10 +45,16 @@ const schoolTourBooking = async (
   const result = await SchoolTourBooking.create(payload);
   return result;
 };
-
+const preRegister = async (
+  payload: IPreRegister
+): Promise<IPreRegister | null> => {
+  const result = await PreRegisterSchema.create(payload);
+  return result;
+};
 export const AdmissionService = {
   studentAdmission,
   getAllStudentAdmission,
   OnlineAppointment,
-  schoolTourBooking
+  schoolTourBooking,
+  preRegister
 };

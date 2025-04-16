@@ -60,9 +60,21 @@ export type ISchoolTourBooking = {
   mobileNumber: string;
   email: string;
 }
+export type IPreRegister = {
+  parentName: string;
+  parentEmail: string;
+  parentContactNumber: string;
+  email: string;
+  grade: string;
+  studentName: string;
+  studentGender: 'Male' | 'Female';
+  studentDOB: string;
+  studentNationality: string;
+  currentSchool: string;
+}
 
 
-
+export type IPreRegisterModel = Model<IPreRegister, Record<string, unknown>>;
 export type IAdmissionModel = Model<IAdmission, Record<string, unknown>>;
 export type IAppointmentModel = Model<IAppointment, Record<string, unknown>>;
 export type ISchoolTourBookingModel = Model<ISchoolTourBooking, Record<string, unknown>>;

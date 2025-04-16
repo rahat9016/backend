@@ -4,6 +4,8 @@ import {
   IAdmissionModel,
   IAppointment,
   IAppointmentModel,
+  IPreRegister,
+  IPreRegisterModel,
   ISchoolTourBooking,
   ISchoolTourBookingModel,
 } from './auth.interface';
@@ -156,6 +158,64 @@ const SchoolTourBookingSchema = new Schema(
   }
 );
 
+const preRegisterSchema = new Schema(
+  {
+    parentName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    parentEmail: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    parentContactNumber: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    grade: {
+      type: String,
+      required: true,
+    },
+    studentName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    studentGender: {
+      type: String,
+      enum: ['Male', 'Female'],
+      required: true,
+    },
+    studentDOB: {
+      type: String,
+      required: true,
+    },
+    studentNationality: {
+      type: String,
+      required: true,
+    },
+    currentSchool: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+export const PreRegisterSchema = model<IPreRegister, IPreRegisterModel>(
+  'PreRegister',
+  preRegisterSchema
+);
 export const SchoolTourBooking = model<ISchoolTourBooking, ISchoolTourBookingModel>(
   'SchoolTourBooking',
   SchoolTourBookingSchema
