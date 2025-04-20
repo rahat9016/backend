@@ -10,5 +10,21 @@ router.post(
   validateRequest(groupValidation.categoryFormSchema),
   CategoryController.categoryCreate
 );
-
+router.put(
+  '/category/:id',
+  validateRequest(groupValidation.categoryFormSchema),
+  CategoryController.categoryUpdate
+);
+router.get(
+  '/category',
+  CategoryController.categoryList
+);
+router.delete(
+  '/category/:id',
+  CategoryController.categoryDelete
+);
+router.get(
+  '/category/:id',
+  CategoryController.categoryGetById
+);
 export const groupRoutes = router;

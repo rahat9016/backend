@@ -13,6 +13,6 @@ const MediaGalleryLibrarySchema: Schema = new Schema({
     type: Date,
     default: Date.now,
   },
-
 });
+
 export const MediaGalleryLibrary = model<IMediaGallery, IMediaGalleryModel>('MediaLibrary', MediaGalleryLibrarySchema);

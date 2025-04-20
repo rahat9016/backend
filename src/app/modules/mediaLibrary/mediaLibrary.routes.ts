@@ -11,4 +11,7 @@ router.post(
 );
 router.get('/gallery', MediaLibraryController.getGalleryMedia);
 router.delete('/gallery', MediaLibraryController.deleteAllImages);
+
+router.post('/upload-images-from-gallery', MediaLibraryController.uploadImagesFromGallery)
+
 export const MediaLibraryRoutes = router;

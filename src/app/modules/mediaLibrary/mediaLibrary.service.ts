@@ -77,8 +77,14 @@ const deleteAllImages = async () => {
   const response = await MediaGalleryLibrary.deleteMany({});
   return response;
 };
+
+const uploadImagesFromGallery = async () => {
+  return
+}
+
 export const MediaService = {
   uploadImages,
   getUploadImages,
   deleteAllImages,
+  uploadImagesFromGallery
 };

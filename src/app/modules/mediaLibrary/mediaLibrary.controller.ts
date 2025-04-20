@@ -54,8 +54,21 @@ const getGalleryMedia = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+
+const uploadImagesFromGallery = asyncHandler(async (req: Request, res: Response) => {
+  // const response = await MediaService.deleteAllImages()
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Media deleted successfully!',
+    // data: response
+  });
+});
+
 export const MediaLibraryController = {
   uploadGalleryMedia,
   getGalleryMedia,
-  deleteAllImages
+  deleteAllImages,
+  uploadImagesFromGallery
 };
