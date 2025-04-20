@@ -2,64 +2,60 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
-import ApiError from '../../../errors/ApiError';
-import { MediaGalleryLibrary } from './mediaLibary.model';
-
+import { MediaService } from './mediaLibrary.service';
+import { calculatePaginationOptions } from '../../util/paginationHelper';
 
 const uploadGalleryMedia = asyncHandler(async (req: Request, res: Response) => {
   // eslint-disable-next-line no-undef
-  const file = req.file as Express.Multer.File;
-
-  if (!file) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'No file uploaded');
-  }
-  if(!req.body.filename){
-    throw new ApiError(httpStatus.BAD_REQUEST, 'File name is required');
-  }
-  const path = file.path.split('public')[1]?.replace(/\\/g, '/').replace(/^\//, '');
-
-  const mimeType = file.mimetype;
-  let fileType: 'image' | 'video' | 'other' = 'other';
-
-  if (mimeType.startsWith('image')) {
-    fileType = 'image';
-  } else if (mimeType.startsWith('video')) {
-    fileType = 'video';
-  }
-
-  const media = await MediaGalleryLibrary.create({
-    filename: req.body.filename,
-    image: path,
-    fileType,
-  });
+  const response = await MediaService.uploadImages(req)
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: 'File uploaded successfully!',
-    data: media,
+    data: response,
   });
 });
 
+const deleteAllImages = asyncHandler(async (req: Request, res: Response) => {
+  const response = await MediaService.deleteAllImages()
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Media deleted successfully!',
+    data: response
+  });
+});
 
 const getGalleryMedia = asyncHandler(async (req: Request, res: Response) => {
-  const mediaList = await MediaGalleryLibrary.find().sort({ uploadDate: -1 });
-
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  const updatedMediaList = mediaList.map(media => ({
-    ...media.toObject(),
-    image: `${baseUrl}/${media.image}`,
-  }));
+  const current_page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (current_page - 1) * limit;
+  const result = await MediaService.getUploadImages(skip, limit);
+  const { total_page, previous_page, next_page } = calculatePaginationOptions({
+    current_page,
+    limit,
+    total: result?.total,
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Media list retrieved successfully!',
-    data: updatedMediaList,
+    message: 'Media fetched successfully!',
+    data: result?.data,
+    meta: {
+      current_page,
+      limit,
+      total_page,
+      previous_page,
+      next_page,
+      total_data: result?.total,
+    },
   });
 });
 
 export const MediaLibraryController = {
   uploadGalleryMedia,
-  getGalleryMedia
+  getGalleryMedia,
+  deleteAllImages
 };

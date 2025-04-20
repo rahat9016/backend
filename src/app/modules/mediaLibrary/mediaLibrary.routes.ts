@@ -6,8 +6,9 @@ const router = express.Router();
 
 router.post(
   '/gallery',
-  upload.single('gallery'),
+  upload.array('gallery'),
   MediaLibraryController.uploadGalleryMedia
 );
-router.get('/gallery', MediaLibraryController.getGalleryMedia)
+router.get('/gallery', MediaLibraryController.getGalleryMedia);
+router.delete('/gallery', MediaLibraryController.deleteAllImages);
 export const MediaLibraryRoutes = router;

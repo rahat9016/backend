@@ -120,7 +120,7 @@ const getUserById = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-console.log(process.env.email_user, process.env.email_pass);
+
 const sentEmail = asyncHandler(async (req: Request, res: Response) => {
   try {
     const transporter = nodemailer.createTransport({

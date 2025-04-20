@@ -16,14 +16,25 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   //   : errorlogger.error('globalErrorHandler ~', error);
 
   console.log('globalErrorHandler ~', error);
-
+  // console.log("error?.name", error?.name)
   let statusCode = 500;
   let message = 'Something went wrong';
   let errorMessages: IGenericErrorMessage[] = [];
 
   // * Validation error handling
-
-  if (error?.name === 'ValidationError') {
+  if (error?.name === 'MongoServerError') {
+    const duplicateField = Object.keys(error.keyValue)[0];
+    const duplicateValue = error.keyValue[duplicateField];
+    statusCode = 409; // Conflict
+    message = `${duplicateValue}" already exists.`;
+    errorMessages = [
+      {
+        path: duplicateField,
+        message: `${duplicateField} "${duplicateValue}" already exists.`,
+      },
+    ];
+  }
+  else if (error?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
@@ -71,7 +82,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
           },
         ]
       : [];
-  }
+  } 
 
   res.status(statusCode).json({
     success: false,
