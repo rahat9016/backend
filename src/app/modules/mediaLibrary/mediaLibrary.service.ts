@@ -3,7 +3,11 @@ import path from 'path';
 import fs from 'fs';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IMediaGallery, PaginationGalleryLibraryGroup, PaginationMediaGallery } from './mediaLibary.interface';
+import {
+  IMediaGallery,
+  PaginationGalleryLibraryGroup,
+  PaginationMediaGallery,
+} from './mediaLibary.interface';
 import { Request } from 'express';
 import { GalleryLibrary, MediaGalleryLibrary } from './mediaLibrary.model';
 import mongoose from 'mongoose';
@@ -16,7 +20,6 @@ const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
   if (!files || files.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'No files uploaded');
   }
-  
   const normalizedNames = Array.isArray(names) ? names : [names];
 
   const mediaItems = files.map((file, index) => {
@@ -55,6 +58,7 @@ const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
 };
 
 const getUploadImages = async (
+  req: Request,
   skip: number,
   limit: number
 ): Promise<PaginationMediaGallery | null> => {
@@ -63,9 +67,18 @@ const getUploadImages = async (
     .limit(limit)
     .lean()
     .sort({ createdAt: -1 });
-
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const response = result.map(media => {
+    return {
+      filename: media.filename,
+      image: `${baseUrl}/${media.image}`,
+      fileType: media.fileType,
+      _id: media._id,
+      uploadDate: media.updatedAt,
+    };
+  });
   const total = await MediaGalleryLibrary.countDocuments();
-  return { data: result, total };
+  return { data: response, total };
 };
 
 const deleteAllImages = async () => {
@@ -88,34 +101,41 @@ const uploadImagesFromGallery = async (req: Request) => {
   try {
     const { images, categoryId } = req.body;
 
-    const validCategoryId = await Category.countDocuments({ _id: { $in: categoryId } })
-    if(!validCategoryId) {
+    const validCategoryId = await Category.countDocuments({
+      _id: { $in: categoryId },
+    });
+    if (!validCategoryId) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
-        'Invalid category id, doesn\'t exist in Database. Please provide valid category ID.'
+        "Invalid category id, doesn't exist in Database. Please provide valid category ID."
       );
     }
 
-    const existingGallery = await GalleryLibrary.findOne({ categoryId: new mongoose.Types.ObjectId(categoryId) });
+    const existingGallery = await GalleryLibrary.findOne({
+      categoryId: new mongoose.Types.ObjectId(categoryId),
+    });
     // If category id not exist so we can insert new item in gallery
     if (!existingGallery) {
       const newGallery = new GalleryLibrary({ images, categoryId });
       return await newGallery.save();
     }
-    const existingImgIds = existingGallery.images.map((item) => item.imgId.toString())
-    
-    const newImages =  images.filter((item: { imgId: string; }) => !existingImgIds.includes(item.imgId))
+    const existingImgIds = existingGallery.images.map(item =>
+      item.imgId.toString()
+    );
 
-    if(newImages.length){
+    const newImages = images.filter(
+      (item: { imgId: string }) => !existingImgIds.includes(item.imgId)
+    );
+
+    if (newImages.length) {
       existingGallery.images.push(...newImages);
       return await existingGallery.save();
     }
-    return existingGallery
-  } catch (error:any) {
+    return existingGallery;
+  } catch (error: any) {
     throw new ApiError(httpStatus.BAD_REQUEST, error.message);
   }
 };
-
 
 const getImagesFromGallery = async (
   skip: number,
@@ -126,7 +146,7 @@ const getImagesFromGallery = async (
     .limit(limit)
     .lean()
     .sort({ createdAt: -1 })
-    .populate('categoryId')
+    .populate('categoryId');
 
   const total = await GalleryLibrary.countDocuments();
   return { data: result, total };
@@ -137,5 +157,5 @@ export const MediaService = {
   getUploadImages,
   deleteAllImages,
   uploadImagesFromGallery,
-  getImagesFromGallery
+  getImagesFromGallery,
 };
