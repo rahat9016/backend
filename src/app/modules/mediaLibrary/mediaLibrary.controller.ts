@@ -56,19 +56,46 @@ const getGalleryMedia = asyncHandler(async (req: Request, res: Response) => {
 
 
 const uploadImagesFromGallery = asyncHandler(async (req: Request, res: Response) => {
-  // const response = await MediaService.deleteAllImages()
+  const response = await MediaService.uploadImagesFromGallery(req)
   
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Media deleted successfully!',
-    // data: response
+    message: 'Image uploaded from gallery.',
+    data: response
   });
 });
 
+const getImagesFromGallery = asyncHandler(async (req: Request, res: Response) => {
+  const current_page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (current_page - 1) * limit;
+  const result = await MediaService.getImagesFromGallery(skip, limit);
+  const { total_page, previous_page, next_page } = calculatePaginationOptions({
+    current_page,
+    limit,
+    total: result?.total,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Gallery fetched successfully!',
+    data: result?.data,
+    meta: {
+      current_page,
+      limit,
+      total_page,
+      previous_page,
+      next_page,
+      total_data: result?.total,
+    },
+  });
+});
 export const MediaLibraryController = {
   uploadGalleryMedia,
   getGalleryMedia,
   deleteAllImages,
-  uploadImagesFromGallery
+  uploadImagesFromGallery,
+  getImagesFromGallery
 };

@@ -1,10 +1,14 @@
+/* eslint-disable no-extra-boolean-cast */
 import path from 'path';
 import fs from 'fs';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { IMediaGallery, PaginationMediaGallery } from './mediaLibary.interface';
+import { IMediaGallery, PaginationGalleryLibraryGroup, PaginationMediaGallery } from './mediaLibary.interface';
 import { Request } from 'express';
-import { MediaGalleryLibrary } from './mediaLibrary.model';
+import { GalleryLibrary, MediaGalleryLibrary } from './mediaLibrary.model';
+import mongoose from 'mongoose';
+import Category from '../group/group.model';
+
 const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
   // eslint-disable-next-line no-undef
   const files = req.files as Express.Multer.File[];
@@ -78,13 +82,58 @@ const deleteAllImages = async () => {
   return response;
 };
 
-const uploadImagesFromGallery = async () => {
-  return
-}
+const uploadImagesFromGallery = async (req: Request) => {
+  try {
+    const { images, categoryId } = req.body;
+
+    const validCategoryId = await Category.countDocuments({ _id: { $in: categoryId } })
+    if(!validCategoryId) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Invalid category id, doesn\'t exist in Database. Please provide valid category ID.'
+      );
+    }
+
+    const existingGallery = await GalleryLibrary.findOne({ categoryId: new mongoose.Types.ObjectId(categoryId) });
+    // If category id not exist so we can insert new item in gallery
+    if (!existingGallery) {
+      const newGallery = new GalleryLibrary({ images, categoryId });
+      return await newGallery.save();
+    }
+    const existingImgIds = existingGallery.images.map((item) => item.imgId.toString())
+    
+    const newImages =  images.filter((item: { imgId: string; }) => !existingImgIds.includes(item.imgId))
+
+    if(newImages.length){
+      existingGallery.images.push(...newImages);
+      return await existingGallery.save();
+    }
+    return existingGallery
+  } catch (error:any) {
+    throw new ApiError(httpStatus.BAD_REQUEST, error.message);
+  }
+};
+
+
+const getImagesFromGallery = async (
+  skip: number,
+  limit: number
+): Promise<PaginationGalleryLibraryGroup | null> => {
+  const result = await GalleryLibrary.find()
+    .skip(skip)
+    .limit(limit)
+    .lean()
+    .sort({ createdAt: -1 })
+    .populate('categoryId')
+
+  const total = await GalleryLibrary.countDocuments();
+  return { data: result, total };
+};
 
 export const MediaService = {
   uploadImages,
   getUploadImages,
   deleteAllImages,
-  uploadImagesFromGallery
+  uploadImagesFromGallery,
+  getImagesFromGallery
 };
