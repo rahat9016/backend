@@ -12,12 +12,14 @@ import Category from '../group/group.model';
 const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
   // eslint-disable-next-line no-undef
   const files = req.files as Express.Multer.File[];
-
+  const names = req.body.names;
   if (!files || files.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'No files uploaded');
   }
+  
+  const normalizedNames = Array.isArray(names) ? names : [names];
 
-  const mediaItems = files.map(file => {
+  const mediaItems = files.map((file, index) => {
     const path = file.path
       .split('public')[1]
       ?.replace(/\\/g, '/')
@@ -32,7 +34,7 @@ const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
     }
 
     return {
-      filename: file.originalname,
+      filename: normalizedNames[index] || file.originalname,
       image: path,
       fileType,
     };
