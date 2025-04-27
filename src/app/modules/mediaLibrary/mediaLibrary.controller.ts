@@ -31,7 +31,8 @@ const getGalleryMedia = asyncHandler(async (req: Request, res: Response) => {
   const current_page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
   const skip = (current_page - 1) * limit;
-  const result = await MediaService.getUploadImages(req, skip, limit);
+  const search = (req.query.search as string) || '';
+  const result = await MediaService.getUploadImages(req, skip, limit, search);
   const { total_page, previous_page, next_page } = calculatePaginationOptions({
     current_page,
     limit,

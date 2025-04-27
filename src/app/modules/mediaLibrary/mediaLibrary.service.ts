@@ -60,9 +60,13 @@ const uploadImages = async (req: Request): Promise<IMediaGallery[] | null> => {
 const getUploadImages = async (
   req: Request,
   skip: number,
-  limit: number
+  limit: number,
+  search: string
 ): Promise<PaginationMediaGallery | null> => {
-  const result = await MediaGalleryLibrary.find()
+  const filter = search
+  ? { filename: { $regex: search, $options: 'i' } }
+  : {};
+  const result = await MediaGalleryLibrary.find(filter)
     .skip(skip)
     .limit(limit)
     .lean()
