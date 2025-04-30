@@ -108,7 +108,7 @@ const faq = asyncHandler(async (req: Request, res: Response) => {
     port: 465,
     auth: {
       user: 'rahat.official.info9016@gmail.com',
-      pass: 'lahi skht pagg evbz',
+      pass: 'taek xkwg qtam ruwf',
     },
   });
 
