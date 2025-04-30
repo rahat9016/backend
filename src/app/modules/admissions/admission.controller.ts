@@ -35,6 +35,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
           <h2>Enrollment Form</h2>
           <div style="width: 56px; height: 64px ></div>
         </div>
+        <div style="margin-top:18px; padding-left:20px; padding-right:20px; ">
         <h3 style="background-color: #11265e; color: white; padding: 10px;">Student Information</h3>
         <table style="width: 100%;">
           <tr><td>First Name:</td><td>${req.body.firstName}</td></tr>
@@ -67,7 +68,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
         <p><strong>Where did you hear from our school?</strong> ${
           req.body.heardFrom || ''
         }</p>
-        <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
+        <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p></div>
       </div>
     `;
     await transport.sendMail({
