@@ -108,17 +108,53 @@ const faq = asyncHandler(async (req: Request, res: Response) => {
     port: 465,
     auth: {
       user: 'rahat.official.info9016@gmail.com',
-      pass: 'aexr qebk rmxf sjrm',
+      pass: 'lahi skht pagg evbz',
     },
-    secure: true
   });
 
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; color: #000;">
+      <div style="background-color: #11265e; color: white; padding: 20px; text-align: center;">
+        <h1>Pan-Asia International School</h1>
+        <h2>Enrollment Form</h2>
+      </div>
+      <h3 style="background-color: #11265e; color: white; padding: 10px;">Student Information</h3>
+      <table style="width: 100%;">
+        <tr><td>First Name:</td><td>${req.body.firstName}</td></tr>
+        <tr><td>Middle Name:</td><td>${req.body.middleName}</td></tr>
+        <tr><td>Last Name:</td><td>${req.body.lastName}</td></tr>
+        <tr><td>Nick Name:</td><td>${req.body.nickName}</td></tr>
+        <tr><td>Gender:</td><td>${req.body.gender}</td></tr>
+        <tr><td>Nationality:</td><td>${req.body.nationality}</td></tr>
+        <tr><td>Phone:</td><td>${req.body.phone}</td></tr>
+        <tr><td>Email:</td><td>${req.body.email}</td></tr>
+        <tr><td>Address:</td><td>${req.body.address}</td></tr>
+        <tr><td>Grade Applying For:</td><td>${req.body.grade}</td></tr>
+        <tr><td>Year Applying For:</td><td>${req.body.year}</td></tr>
+        <tr><td>Current School Name:</td><td>${req.body.currentSchool}</td></tr>
+      </table>
+      <h3 style="background-color: #11265e; color: white; padding: 10px;">Parent/Guardian Information</h3>
+      <table style="width: 100%;">
+        <tr><td>First Name:</td><td>${req.body.parentFirstName}</td></tr>
+        <tr><td>Middle Name:</td><td>${req.body.parentMiddleName}</td></tr>
+        <tr><td>Last Name:</td><td>${req.body.parentLastName}</td></tr>
+        <tr><td>Relation:</td><td>${req.body.relation}</td></tr>
+        <tr><td>Nationality:</td><td>${req.body.parentNationality}</td></tr>
+        <tr><td>Phone:</td><td>${req.body.parentPhone}</td></tr>
+        <tr><td>Email:</td><td>${req.body.parentEmail}</td></tr>
+        <tr><td>Address:</td><td>${req.body.parentAddress}</td></tr>
+      </table>
+      <h3 style="background-color: #11265e; color: white; padding: 10px;">Additional Information</h3>
+      <p><strong>Where did you hear from our school?</strong> ${req.body.heardFrom || ''}</p>
+      <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
+    </div>
+  `;
   const info = await transport.sendMail({
     from: 'rahat.official.info9016@gmail.com',
-    to: 'rahat.official.info9016@gmail.com', 
+    to: 'rahat.official.info9016@gmail.com', // list of receivers
     subject: 'Hello ✔', 
-    text: 'Hello world?', 
-    html: '<b>Hello world?</b>', 
+    text: 'Hello world?', // plain text body
+    html: htmlContent, // html body
   });
 
   sendResponse(res, {
