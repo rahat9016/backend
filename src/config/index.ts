@@ -14,4 +14,5 @@ export default {
     expires: process.env.JWT_EXPIRES_IN,
     refreshExpires: process.env.JWT_REFRESH_EXPIRES_IN,
   },
+  
 };
