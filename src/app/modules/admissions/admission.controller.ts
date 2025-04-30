@@ -29,8 +29,8 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; color: #000;">
-        <div style="background-color: #11265e; color: white; padding: 20px; display: flex; align-items:center; justify-between">
-        <img src="https://backend-beryl-sigma-47.vercel.app/logo.png" width="64px" height="64px" />
+        <div style="background-color: #11265e; color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+          <img src="https://backend-beryl-sigma-47.vercel.app/logo.png" width="64px" height="64px" />
           <h1>Pan-Asia International School</h1>
           <h2>Enrollment Form</h2>
           <div style="width: 56px; height: 64px ></div>
