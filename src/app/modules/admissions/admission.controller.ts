@@ -2,10 +2,17 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
-import { IAdmission, IAppointment, IFAQ, IFeedback, IPreRegister, ISchoolTourBooking } from './auth.interface';
+import {
+  IAdmission,
+  IAppointment,
+  // IFAQ,
+  IFeedback,
+  IPreRegister,
+  ISchoolTourBooking,
+} from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
-
+import nodemailer from 'nodemailer';
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
   // create user
   const result = await AdmissionService.studentAdmission(req.body);
@@ -94,15 +101,33 @@ const feedback = asyncHandler(async (req: Request, res: Response) => {
 
 const faq = asyncHandler(async (req: Request, res: Response) => {
   // create user
-  const result = await AdmissionService.faq(req.body);
-  sendResponse<IFAQ>(res, {
+  // const result = await AdmissionService.faq(req.body);
+
+  const transport = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    auth: {
+      user: 'rahat.official.info9016@gmail.com',
+      pass: 'lahi skht pagg evbz',
+    },
+    secure: true
+  });
+
+  const info = await transport.sendMail({
+    from: 'rahat.official.info9016@gmail.com',
+    to: 'rahat.official.info9016@gmail.com', 
+    subject: 'Hello ✔', 
+    text: 'Hello world?', 
+    html: '<b>Hello world?</b>', 
+  });
+
+  sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: 'Submitted successfully. ',
-    data: result,
+    data: info,
   });
 });
-
 
 export const AdmissionController = {
   studentAdmission,
@@ -111,5 +136,5 @@ export const AdmissionController = {
   schoolTourBooking,
   preRegister,
   feedback,
-  faq
+  faq,
 };
