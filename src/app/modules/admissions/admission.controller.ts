@@ -29,13 +29,11 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; color: #000;">
-        <div style="background-color: #11265e; color: white; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
-          <img src="https://backend-beryl-sigma-47.vercel.app/logo.png" width="64px" height="64px" />
+        <div style="background-color: #11265e; color: white; padding: 20px; text-align: center;">
+        <img src="https://backend-beryl-sigma-47.vercel.app/logo.png" />
           <h1>Pan-Asia International School</h1>
           <h2>Enrollment Form</h2>
-          <div style="width: 56px; height: 64px ></div>
         </div>
-        <div style="margin-top:18px; padding-left:20px; padding-right:20px; ">
         <h3 style="background-color: #11265e; color: white; padding: 10px;">Student Information</h3>
         <table style="width: 100%;">
           <tr><td>First Name:</td><td>${req.body.firstName}</td></tr>
@@ -68,7 +66,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
         <p><strong>Where did you hear from our school?</strong> ${
           req.body.heardFrom || ''
         }</p>
-        <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p></div>
+        <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
       </div>
     `;
     await transport.sendMail({
