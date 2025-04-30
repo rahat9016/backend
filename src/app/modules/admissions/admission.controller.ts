@@ -70,8 +70,8 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
       </div>
     `;
     await transport.sendMail({
-      from: 'minhajurrohoman9016@gmail.com',
-      to: 'minhajurrohoman9016@gmail.com',
+      from: 'rahat.official.info9016@gmail.com',
+      to: 'rahat.official.info9016@gmail.com, minhajurrohoman9016@gmail.com',
       subject: 'Application for Admission',
       html: htmlContent,
     });
