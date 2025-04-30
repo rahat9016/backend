@@ -45,10 +45,10 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
           <tr><td>Phone:</td><td>${req.body.phone}</td></tr>
           <tr><td>Email:</td><td>${req.body.email}</td></tr>
           <tr><td>Address:</td><td>${req.body.address}</td></tr>
-          <tr><td>Grade Applying For:</td><td>${req.body.grade}</td></tr>
-          <tr><td>Year Applying For:</td><td>${req.body.year}</td></tr>
+          <tr><td>Grade Applying For:</td><td>${req.body.gradeApplyingFor}</td></tr>
+          <tr><td>Year Applying For:</td><td>${req.body.yearApplyingFor}</td></tr>
           <tr><td>Current School Name:</td><td>${
-            req.body.currentSchool
+            req.body.currentSchoolName
           }</td></tr>
         </table>
         <h3 style="background-color: #11265e; color: white; padding: 10px;">Parent/Guardian Information</h3>
@@ -64,7 +64,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
         </table>
         <h3 style="background-color: #11265e; color: white; padding: 10px;">Additional Information</h3>
         <p><strong>Where did you hear from our school?</strong> ${
-          req.body.heardFrom || ''
+          req.body.comments || ''
         }</p>
         <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
       </div>
