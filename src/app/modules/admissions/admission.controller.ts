@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
+import { Readable } from 'stream';
+
 import nodemailer from 'nodemailer';
 import {
   // IAdmission,
@@ -13,6 +15,24 @@ import {
 } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
+import puppeteer from 'puppeteer';
+
+const generatePdf = async (htmlContent: string): Promise<Buffer> => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
+
+  const pdfUint8Array = await page.pdf({
+    format: 'A4',
+    printBackground: true,
+    margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
+  });
+
+  await browser.close();
+
+  // Convert Uint8Array to Buffer
+  return Buffer.from(pdfUint8Array);
+};
 
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
   const result = await AdmissionService.studentAdmission(req.body);
@@ -36,8 +56,12 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
            <tr><td>Phone:</td><td>${req.body.phone}</td></tr>
            <tr><td>Email:</td><td>${req.body.email}</td></tr>
            <tr><td>Address:</td><td>${req.body.address}</td></tr>
-           <tr><td>Grade Applying For:</td><td>${req.body.gradeApplyingFor}</td></tr>
-           <tr><td>Year Applying For:</td><td>${req.body.yearApplyingFor}</td></tr>
+           <tr><td>Grade Applying For:</td><td>${
+             req.body.gradeApplyingFor
+           }</td></tr>
+           <tr><td>Year Applying For:</td><td>${
+             req.body.yearApplyingFor
+           }</td></tr>
            <tr><td>Current School Name:</td><td>${
              req.body.currentSchoolName
            }</td></tr>
@@ -60,6 +84,9 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
          <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
        </div>
      `;
+    const pdfBuffer = await generatePdf(htmlContent);
+    const pdfStream = Readable.from(pdfBuffer);
+  
     const transport = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -68,6 +95,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
         user: 'rahat.official.info9016@gmail.com',
         pass: 'taek xkwg qtam ruwf',
       },
+      tls: { rejectUnauthorized: true },
     });
 
     await transport.sendMail({
@@ -75,7 +103,14 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
       to: 'rahat.official.info9016@gmail.com, minhajurrohoman9016@gmail.com',
       subject: 'Enrollment Form Submission',
       text: 'Please find the attached enrollment form PDF.',
-      html: htmlContent 
+      html: htmlContent,
+      attachments: [
+        {
+          filename: 'enrollment-form.pdf',
+          content: pdfStream,
+          contentType: 'application/pdf',
+        },
+      ],
     });
   }
 
