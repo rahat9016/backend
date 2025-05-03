@@ -16,9 +16,12 @@ import {
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
 import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
 
 const generatePdf = async (htmlContent: string): Promise<Buffer> => {
   const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
     headless: true,
   });
   const page = await browser.newPage();
