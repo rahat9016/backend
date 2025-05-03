@@ -18,7 +18,9 @@ import { calculatePaginationOptions } from '../../util/paginationHelper';
 import puppeteer from 'puppeteer';
 
 const generatePdf = async (htmlContent: string): Promise<Buffer> => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
   const page = await browser.newPage();
   await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
 
@@ -86,7 +88,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
      `;
     const pdfBuffer = await generatePdf(htmlContent);
     const pdfStream = Readable.from(pdfBuffer);
-  
+
     const transport = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
