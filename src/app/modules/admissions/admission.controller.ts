@@ -4,7 +4,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import {
-  IAdmission,
+  // IAdmission,
   IAppointment,
   // IFAQ,
   IFeedback,
@@ -13,73 +13,64 @@ import {
 } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
+import PDFDocument from 'pdfkit';
 
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
-  // create user
   const result = await AdmissionService.studentAdmission(req.body);
+
   if (result) {
-    const transport = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      auth: {
-        user: 'rahat.official.info9016@gmail.com',
-        pass: 'taek xkwg qtam ruwf',
-      },
+    const doc = new PDFDocument();
+    const buffers: Uint8Array[] = [];
+
+
+    doc.on('data', chunk => buffers.push(chunk));
+    doc.on('end', async () => {
+      const pdfBuffer = Buffer.concat(buffers);
+
+      const transport = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'rahat.official.info9016@gmail.com',
+          pass: 'taek xkwg qtam ruwf',
+        },
+      });
+
+      await transport.sendMail({
+        from: 'rahat.official.info9016@gmail.com',
+        to: 'rahat.official.info9016@gmail.com, minhajurrohoman9016@gmail.com',
+        subject: 'Enrollment Form Submission',
+        text: 'Please find the attached enrollment form PDF.',
+        attachments: [
+          {
+            filename: 'Enrollment_Form.pdf',
+            content: pdfBuffer,
+          },
+        ],
+      });
     });
 
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; color: #000;">
-        <div style="background-color: #11265e; color: white; padding: 20px; text-align: center;">
-        <img src="https://backend-beryl-sigma-47.vercel.app/logo.png" />
-          <h1>Pan-Asia International School</h1>
-          <h2>Enrollment Form</h2>
-        </div>
-        <h3 style="background-color: #11265e; color: white; padding: 10px;">Student Information</h3>
-        <table style="width: 100%;">
-          <tr><td>First Name:</td><td>${req.body.firstName}</td></tr>
-          <tr><td>Middle Name:</td><td>${req.body.middleName}</td></tr>
-          <tr><td>Last Name:</td><td>${req.body.lastName}</td></tr>
-          <tr><td>Nick Name:</td><td>${req.body.nickName}</td></tr>
-          <tr><td>Gender:</td><td>${req.body.gender}</td></tr>
-          <tr><td>Nationality:</td><td>${req.body.nationality}</td></tr>
-          <tr><td>Phone:</td><td>${req.body.phone}</td></tr>
-          <tr><td>Email:</td><td>${req.body.email}</td></tr>
-          <tr><td>Address:</td><td>${req.body.address}</td></tr>
-          <tr><td>Grade Applying For:</td><td>${req.body.gradeApplyingFor}</td></tr>
-          <tr><td>Year Applying For:</td><td>${req.body.yearApplyingFor}</td></tr>
-          <tr><td>Current School Name:</td><td>${
-            req.body.currentSchoolName
-          }</td></tr>
-        </table>
-        <h3 style="background-color: #11265e; color: white; padding: 10px;">Parent/Guardian Information</h3>
-        <table style="width: 100%;">
-          <tr><td>First Name:</td><td>${req.body.parentFirstName}</td></tr>
-          <tr><td>Middle Name:</td><td>${req.body.parentMiddleName}</td></tr>
-          <tr><td>Last Name:</td><td>${req.body.parentLastName}</td></tr>
-          <tr><td>Relation:</td><td>${req.body.relation}</td></tr>
-          <tr><td>Nationality:</td><td>${req.body.parentNationality}</td></tr>
-          <tr><td>Phone:</td><td>${req.body.parentPhone}</td></tr>
-          <tr><td>Email:</td><td>${req.body.parentEmail}</td></tr>
-          <tr><td>Address:</td><td>${req.body.parentAddress}</td></tr>
-        </table>
-        <h3 style="background-color: #11265e; color: white; padding: 10px;">Additional Information</h3>
-        <p><strong>Where did you hear from our school?</strong> ${
-          req.body.comments || ''
-        }</p>
-        <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
-      </div>
-    `;
-    await transport.sendMail({
-      from: 'rahat.official.info9016@gmail.com',
-      to: 'rahat.official.info9016@gmail.com, minhajurrohoman9016@gmail.com',
-      subject: 'Application for Admission',
-      html: htmlContent,
-    });
+    // PDF content generation
+    doc.fontSize(20).text('Enrollment Form', { align: 'center' });
+    doc.moveDown();
+    doc
+      .fontSize(14)
+      .text(
+        `Student Name: ${result.firstName} ${result.middleName} ${result.lastName}`
+      );
+    doc.text(`Nickname: ${result.nickName}`);
+    doc.text(`Phone: ${result.phone}`);
+    doc.text(`Email: ${result.email}`);
+    doc.text(`Address: ${result.address}`);
+    // ...continue adding other fields
+    doc.end();
   }
-  sendResponse<IAdmission>(res, {
+
+  sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: 'Application submitted successfully. ',
+    message: 'Application submitted successfully.',
     data: result,
   });
 });
