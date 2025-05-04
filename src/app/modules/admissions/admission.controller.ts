@@ -187,6 +187,7 @@ const preRegister = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+
 const feedback = asyncHandler(async (req: Request, res: Response) => {
   // create user
   const result = await AdmissionService.feedback(req.body);
