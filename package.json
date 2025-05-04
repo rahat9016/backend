@@ -27,6 +27,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^1.4.12",
     "@types/nodemailer": "^6.4.17",
+    "@types/pdfkit": "^0.13.9",
     "eslint-config-prettier": "^8.8.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
@@ -37,6 +38,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^133.0.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "bcrypt": "^5.1.1",
@@ -52,6 +54,7 @@
     "mongoose": "^7.2.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
+    "pdfkit": "^0.17.1",
     "puppeteer": "^24.8.0",
     "winston": "^3.9.0",
     "winston-daily-rotate-file": "^4.7.1",
