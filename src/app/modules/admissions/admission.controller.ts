@@ -2,8 +2,6 @@ import httpStatus from 'http-status';
 import asyncHandler from '../../../shared/asyncHandler';
 import sendResponse from '../../../shared/sendResponse';
 import { Request, Response } from 'express';
-import { Readable } from 'stream';
-
 import nodemailer from 'nodemailer';
 import {
   // IAdmission,
@@ -15,29 +13,8 @@ import {
 } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
-import puppeteer from 'puppeteer';
-import chromium from 'chrome-aws-lambda';
 
-const generatePdf = async (htmlContent: string): Promise<Buffer> => {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath: await chromium.executablePath,
-    headless: true,
-  });
-  const page = await browser.newPage();
-  await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
 
-  const pdfUint8Array = await page.pdf({
-    format: 'A4',
-    printBackground: true,
-    margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
-  });
-
-  await browser.close();
-
-  // Convert Uint8Array to Buffer
-  return Buffer.from(pdfUint8Array);
-};
 
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
   const result = await AdmissionService.studentAdmission(req.body);
@@ -89,8 +66,6 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
          <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
        </div>
      `;
-    const pdfBuffer = await generatePdf(htmlContent);
-    const pdfStream = Readable.from(pdfBuffer);
 
     const transport = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -109,13 +84,6 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
       subject: 'Enrollment Form Submission',
       text: 'Please find the attached enrollment form PDF.',
       html: htmlContent,
-      attachments: [
-        {
-          filename: 'enrollment-form.pdf',
-          content: pdfStream,
-          contentType: 'application/pdf',
-        },
-      ],
     });
   }
 
