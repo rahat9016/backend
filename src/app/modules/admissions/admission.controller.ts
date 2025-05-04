@@ -13,7 +13,9 @@ import {
 } from './auth.interface';
 import { AdmissionService } from './admission.service';
 import { calculatePaginationOptions } from '../../util/paginationHelper';
-
+import puppeteer from 'puppeteer';
+import path from 'path';
+import fs from 'fs';
 
 
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
@@ -66,7 +68,26 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
          <p style="text-align: right; margin-top: 40px;"><strong>Authorized’s Signature</strong></p>
        </div>
      `;
+     const publicDir = path.join(process.cwd(), 'public');
+     if (!fs.existsSync(publicDir)) {
+       fs.mkdirSync(publicDir);
+     }
+     const pdfPath = path.join(publicDir, 'enrollment-form.pdf');
 
+     const browser = await puppeteer.launch({
+      headless:"shell",
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
+
+    await page.pdf({
+      path: pdfPath,
+      format:"A4",
+      printBackground:true
+    })
+
+    await browser.close()
     const transport = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -84,6 +105,13 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
       subject: 'Enrollment Form Submission',
       text: 'Please find the attached enrollment form PDF.',
       html: htmlContent,
+      attachments: [
+        {
+          filename: 'enrollment-form.pdf',
+          path: pdfPath,
+          contentType: 'application/pdf',
+        },
+      ],
     });
   }
 
