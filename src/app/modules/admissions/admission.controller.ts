@@ -37,6 +37,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
     
     const browser = await puppeteer.launch({
       headless: true,
+      executablePath: '/usr/bin/chromium',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
