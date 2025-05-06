@@ -30,11 +30,20 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
       '../../../views/',
       'enrollment-form.ejs'
     );
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
     const html = await new Promise<string>((resolve, reject) => {
-      ejs.renderFile(templatePath, { data: result }, (error, html) => {
-        if (error) reject(error);
-        else resolve(html);
-      });
+      ejs.renderFile(
+        templatePath,
+        {
+          data: result,
+          logo: `${baseUrl}/logo.png`,
+          mainLogo: `${baseUrl}/panasia.png`,
+        },
+        (error, html) => {
+          if (error) reject(error);
+          else resolve(html);
+        }
+      );
     });
 
     const browser = await puppeteer.launch({
@@ -46,10 +55,12 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
     const page = await browser.newPage();
 
     await page.setContent(html, { waitUntil: 'networkidle0' });
+    // const pdfPath = path.join(__dirname, '../../../../public', 'enrollment-form.pdf');
     const pdfBuffer = await page.pdf({
       format: 'A4',
-      margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
+      margin: { top: '12mm', right: '8mm', bottom: '12mm', left: '8mm' },
       printBackground: true,
+      // path: pdfPath
     });
     await browser.close();
 
