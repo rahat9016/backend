@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Enrollment Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #000; }
+    h1, h2 { text-align: center; color: white; background-color: #11265e; padding: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    td { padding: 8px; border: 1px solid #ddd; }
+    .section-header { background-color: #11265e; color: white; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Pan-Asia International School</h1>
+  <h2>Enrollment Form</h2>
+
+  <div class="section-header">Student Information</div>
+  <table>
+    <tr><td>First Name</td><td><%= data.firstName %></td></tr>
+    <tr><td>Last Name</td><td><%= data.lastName %></td></tr>
+    <tr><td>Gender</td><td><%= data.gender %></td></tr>
+    <tr><td>Phone</td><td><%= data.phone %></td></tr>
+    <tr><td>Email</td><td><%= data.email %></td></tr>
+  </table>
+
+  <div class="section-header">Parent/Guardian Info</div>
+  <table>
+    <tr><td>Parent Name</td><td><%= data.parentFirstName %></td></tr>
+    <tr><td>Phone</td><td><%= data.parentPhone %></td></tr>
+    <tr><td>Email</td><td><%= data.parentEmail %></td></tr>
+  </table>
+
+  <p style="margin-top: 50px; text-align: right;">Authorized Signature</p>
+</body>
+</html>

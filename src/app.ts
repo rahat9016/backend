@@ -21,10 +21,11 @@ app.use(ExpressMongoSanitize());
 // * Serve static files
 const publicPath = path.join(__dirname, '../public');
 app.use(express.static(publicPath));
-
+app.set('views', path.join(__dirname, './views'))
 // * Application routes
 
 app.use('/api/v1', routes);
+app.set('view engine', 'ejs');
 
 // Serve index.html for the base route
 app.get('/', (req: Request, res: Response) => {
