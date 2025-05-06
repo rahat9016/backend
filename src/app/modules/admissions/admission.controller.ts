@@ -58,7 +58,7 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
     // const pdfPath = path.join(__dirname, '../../../../public', 'enrollment-form.pdf');
     const pdfBuffer = await page.pdf({
       format: 'A4',
-      margin: { top: '12mm', right: '8mm', bottom: '12mm', left: '8mm' },
+      margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
       printBackground: true,
       // path: pdfPath
     });
