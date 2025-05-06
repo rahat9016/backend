@@ -16,7 +16,9 @@ import { calculatePaginationOptions } from '../../util/paginationHelper';
 
 import path from 'path';
 import ejs from 'ejs';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
+
 import config from '../../../config';
 
 const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
@@ -34,19 +36,20 @@ const studentAdmission = asyncHandler(async (req: Request, res: Response) => {
         else resolve(html);
       });
     });
-    
+
     const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: '/usr/bin/google-chrome-stable',
-      args: ['--no-sandbox']
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
-    
+
     await page.setContent(html, { waitUntil: 'networkidle0' });
     const pdfBuffer = await page.pdf({
       format: 'A4',
       margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
-      printBackground: true
+      printBackground: true,
     });
     await browser.close();
 
